@@ -14,7 +14,7 @@ pub struct Block {
     pub index: u32,
     pub timestamp: SystemTime,
     pub transactions: Vec<Transaction>,
-    pub proof: u32,
+    pub proof: u64,
     pub previous_hash: String
 }
 
@@ -31,7 +31,7 @@ impl Transaction {
 }
 
 impl Block {
-    fn new(previous_hash: String, proof: u32) -> Block {
+    fn new(previous_hash: String, proof: u64) -> Block {
         Block { index: 0, timestamp: SystemTime::now(), transactions: Vec::new(), proof: proof, previous_hash: previous_hash }
     }
 }
@@ -66,5 +66,23 @@ impl Blockchain {
         let mut s = DefaultHasher::new();
         block.hash(&mut s);
         s.finish().to_string()
+    }
+
+    pub fn proof_of_work(self, last_proof: u64) -> u64 {
+        let mut proof = 0;
+        while Blockchain::valid_proof(last_proof, proof) == false {
+            proof += 1;
+        }
+
+        proof
+    }
+
+    fn valid_proof(last_proof: u64, proof: u64) -> u64 {
+        println!("Proof of work");
+        let mut s = DefaultHasher::new();
+        let test_val = last_proof + proof;
+        test_val.hash(&mut s);
+        let output = s.finish();
+        output
     }
 }
