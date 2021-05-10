@@ -2,14 +2,14 @@ use std::time::SystemTime;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
-#[derive(Hash, Debug)]
+#[derive(Debug)]
 pub struct Transaction {
     pub sender: String,
     pub recipient: String,
     pub amount: u32
 }
 
-#[derive(Hash, Debug)]
+#[derive(Debug)]
 pub struct Block {
     pub index: u32,
     pub timestamp: SystemTime,
@@ -61,10 +61,11 @@ impl Blockchain {
     }
 
     // How do I make this static? is it just by leaving self out?
+    // TODO: make better than just hashing the timestamp
     fn hash(block: Block) -> String {
         println!("Hashing");
         let mut s = DefaultHasher::new();
-        block.hash(&mut s);
+        block.timestamp.hash(&mut s);
         s.finish().to_string()
     }
 
@@ -77,12 +78,16 @@ impl Blockchain {
         proof
     }
 
-    fn valid_proof(last_proof: u64, proof: u64) -> u64 {
-        println!("Proof of work");
+    // TODO: finish this, for now we just check mod ten. The example uses the last four digits are zero
+    fn valid_proof(last_proof: u64, proof: u64) -> bool {
+        println!("Proof of work for proof: {}", proof);
         let mut s = DefaultHasher::new();
         let test_val = last_proof + proof;
         test_val.hash(&mut s);
-        let output = s.finish();
-        output
+        let new_hash = s.finish();
+        let digits = new_hash.to_string().chars();
+    
+        // Check if multiple of ten
+        new_hash % 10 == 0
     }
 }
