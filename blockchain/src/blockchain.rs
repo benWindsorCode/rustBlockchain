@@ -4,6 +4,8 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::fmt;
 
+const GENESIS_ACCOUNT: &str = "Genesis";
+
 #[derive(Debug, Clone)]
 pub struct Transaction {
     pub sender: String,
@@ -40,16 +42,12 @@ impl Block {
 
 impl Blockchain {
     pub fn new() -> Blockchain {
-        // TODO: make this a const/property of the Blockchain
-        // Genesis account name
-        let genesis_account = "GENESIS".to_string();
-
         // println!("Creating new blockchain with genesis block");
         let first_hash = "".to_string();
         let first_proof = 100;
         let mut first_block = Block::new(first_hash, first_proof);
-        let genesis_transaction_1 = Transaction::new(genesis_account.clone(), "senderA".to_string(), 5000.);
-        let genesis_transaction_2 = Transaction::new(genesis_account.clone(), "senderC".to_string(), 5000.);
+        let genesis_transaction_1 = Transaction::new(GENESIS_ACCOUNT.to_string(), "senderA".to_string(), 5000.);
+        let genesis_transaction_2 = Transaction::new(GENESIS_ACCOUNT.to_string(), "senderC".to_string(), 5000.);
         first_block.transactions = vec![genesis_transaction_1, genesis_transaction_2];
         Blockchain { chain: vec![first_block], current_transactions: Vec::new() }
     }
@@ -96,19 +94,16 @@ impl Blockchain {
 
     // Create some new coin for the recipient
     pub fn create_coin(&mut self, recipient: String, amount: f64) -> usize {
-        // TODO: make this a const/property of the Blockchain
-        // Genesis account name
-        let genesis_account = "GENESIS".to_string();
-
-        self.new_transaction(genesis_account, recipient, amount)
+        self.new_transaction(GENESIS_ACCOUNT.to_string(), recipient, amount)
     }
 
     // Adds transaction, returns index of new block that will hold this transaction
     pub fn new_transaction(&mut self, sender: String, recipient: String, amount: f64) -> usize {
-        // TODO: deal with genesis account here, should be allowed negative balance
         let current_balances = self.balances();
         let sender_bal = current_balances.get(&sender).unwrap_or(&0.);
-        if sender_bal - amount < 0. {
+
+        // Ensure sender has enough balance to send amount. Only allow negative balances from the Genesis account.
+        if GENESIS_ACCOUNT != sender && sender_bal - amount < 0. {
             panic!("Sender bal {} - amount {} < 0, cannot complete transaction", sender_bal, amount);
         }
 
@@ -171,6 +166,7 @@ impl fmt::Display for Blockchain {
         for block in &self.chain {
             let block_string = format!("{}", block);
             blockchain_for_display.push_str(&block_string);
+            // Arrow between blocks
             blockchain_for_display.push_str("\n|\nv\n");
         }
 
