@@ -6,7 +6,7 @@ fn main() {
     println!("(1) INITIAL BLOCKCHAIN");
     println!("{}", chain);
     chain.new_transaction("senderA".to_string(), "recipientA".to_string(), 5.);
-    chain.new_transaction("senderC".to_string(), "recipientD".to_string(), 12.);
+    chain.new_transaction("senderC".to_string(), "recipientC".to_string(), 12.);
 
     println!("(2) BLOCKCHAIN WITH TRANSACTIONS");
     println!("{}", chain);
@@ -21,6 +21,6 @@ fn main() {
     chain.new_block(new_proof);
     println!("{}", chain);
 
-
+    println!("(4) BALANCES AT END");
     println!("{:?}", chain.balances());
 }

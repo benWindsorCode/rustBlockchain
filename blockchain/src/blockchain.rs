@@ -47,10 +47,11 @@ impl Blockchain {
         // println!("Creating new blockchain with genesis block");
         let first_hash = "".to_string();
         let first_proof = 100;
-        let first_block = Block::new(first_hash, first_proof);
+        let mut first_block = Block::new(first_hash, first_proof);
         let genesis_transaction_1 = Transaction::new(genesis_account.clone(), "senderA".to_string(), 5000.);
         let genesis_transaction_2 = Transaction::new(genesis_account.clone(), "senderC".to_string(), 5000.);
-        Blockchain { chain: vec![first_block], current_transactions: vec![genesis_transaction_1, genesis_transaction_2] }
+        first_block.transactions = vec![genesis_transaction_1, genesis_transaction_2];
+        Blockchain { chain: vec![first_block], current_transactions: Vec::new() }
     }
 
     pub fn new_block(&mut self, proof: u64) {
@@ -108,7 +109,7 @@ impl Blockchain {
         let current_balances = self.balances();
         let sender_bal = current_balances.get(&sender).unwrap_or(&0.);
         if sender_bal - amount < 0. {
-            // panic!("Sender bal {} - amount {} < 0, cannot complete transaction", sender_bal, amount);
+            panic!("Sender bal {} - amount {} < 0, cannot complete transaction", sender_bal, amount);
         }
 
         let new_transaction = Transaction::new(sender, recipient, amount);
