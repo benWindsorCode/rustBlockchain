@@ -1,6 +1,13 @@
 use blockchain::blockchain::Blockchain;
+use blockchain::interface;
 
 fn main() {
+    interface::start_interface();
+
+    // test_chain();
+}
+
+fn test_chain() {
     let mut chain = Blockchain::new();
 
     println!("(1) INITIAL BLOCKCHAIN");
@@ -29,4 +36,5 @@ fn main() {
 
     println!("(4) BALANCES AT END");
     println!("{:?}", chain.balances());
+
 }

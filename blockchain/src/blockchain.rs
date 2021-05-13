@@ -42,7 +42,6 @@ impl Block {
 
 impl Blockchain {
     pub fn new() -> Blockchain {
-        // println!("Creating new blockchain with genesis block");
         let first_hash = "".to_string();
         let first_proof = 100;
         let mut first_block = Block::new(first_hash, first_proof);
@@ -70,7 +69,6 @@ impl Blockchain {
 
         self.current_transactions = Vec::new();
 
-        // println!("Adding new block: {:?}", block);
         self.chain.push(block);
     }
 
@@ -92,7 +90,7 @@ impl Blockchain {
         balances
     }
 
-    // Create some new coin for the recipient
+    // Create new coins for the recipient
     pub fn create_coin(&mut self, recipient: String, amount: f64) -> usize {
         self.new_transaction(GENESIS_ACCOUNT.to_string(), recipient, amount)
     }
@@ -109,7 +107,6 @@ impl Blockchain {
 
         let new_transaction = Transaction::new(sender, recipient, amount);
 
-        // println!("Adding new transaction: {:?}", new_transaction);
         self.current_transactions.push(new_transaction);
 
         return self.last_block_index() + 1;
@@ -120,10 +117,8 @@ impl Blockchain {
         self.chain.len() - 1
     }
 
-    // How do I make this static? is it just by leaving self out?
     // TODO: make better than just hashing the timestamp
     fn hash(block: &Block) -> String {
-        // println!("Hashing");
         let mut s = DefaultHasher::new();
         block.timestamp.hash(&mut s);
         s.finish().to_string()
@@ -144,16 +139,13 @@ impl Blockchain {
         proof
     }
 
-    // TODO: finish this, for now we just check mod ten. The example uses the last four digits are zero
+    // Very simple proof function, easy to compute and check
     fn valid_proof(last_proof: u64, proof: u64) -> bool {
-        // println!("Proof of work for proof: {}", proof);
         let mut s = DefaultHasher::new();
         let test_val = last_proof + proof;
         test_val.hash(&mut s);
         let new_hash = s.finish();
-        // let digits = new_hash.to_string().chars();
     
-        // Check if multiple of twenty three
         new_hash % 23 == 0
     }
 }
@@ -166,6 +158,7 @@ impl fmt::Display for Blockchain {
         for block in &self.chain {
             let block_string = format!("{}", block);
             blockchain_for_display.push_str(&block_string);
+
             // Arrow between blocks
             blockchain_for_display.push_str("\n|\nv\n");
         }
