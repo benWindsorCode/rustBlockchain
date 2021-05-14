@@ -6,7 +6,7 @@ use crate::blockchain::Blockchain;
 pub fn start_interface() {
     let mut siv = cursive::default();
 
-    let mut chain = Blockchain::new();
+    let chain = Blockchain::new();
 
     siv.set_user_data(chain);
 
@@ -23,7 +23,6 @@ pub fn start_interface() {
 
                     s.set_user_data(chain);
                     s.add_layer(dialog);
-
                 })
                 .leaf("Show Balances", |s| {
                     let chain = s.take_user_data::<Blockchain>().unwrap();
@@ -45,6 +44,17 @@ pub fn start_interface() {
                     s.set_user_data(chain);
                     s.add_layer(Dialog::info("Creating block"));
                 })
+                .leaf("View Chain", |s| {
+                    let chain = s.take_user_data::<Blockchain>().unwrap();
+                    let dialog = Dialog::around(
+                            TextView::new(format!("{}", chain))
+                            .scrollable()
+                        )
+                        .button("Ok", |s| { s.pop_layer(); } );
+
+                    s.set_user_data(chain);
+                    s.add_layer(dialog);
+                })
         )
         .add_leaf(
             "Help",
@@ -60,7 +70,7 @@ pub fn start_interface() {
     siv.set_autohide_menu(false);
 
     siv.add_global_callback(Key::Esc, |s| s.select_menubar());
-    siv.add_global_callback(Key::Up, |s| s.select_menubar());
+    // siv.add_global_callback(Key::Up, |s| s.select_menubar());
 
     //siv.add_layer(Dialog::around(TextView::new("Press <ESC> to access menu!"))
     //    .title("Local Blockchain"));
@@ -114,7 +124,6 @@ fn process_transaction(s: &mut Cursive, sender: &str, recipient: &str, amount: &
     s.pop_layer();
 
     chain.new_transaction(sender.to_string(), recipient.to_string(), amount);
-    // s.add_layer(Dialog::info(format!("{:?}", chain)));
     s.add_layer(Dialog::info("New transaction added"));
     s.set_user_data(chain);
 }
