@@ -45,6 +45,8 @@ To quit select 'Quit' from the menu bar or use Ctrl+C.
 Note: there is no persistance between runs or any concensus algorithm, this is just a simple local toy blockchain.
 
 # Code Tour
+I followed this tutorial as a rough guide: https://hackernoon.com/learn-blockchains-by-building-one-117428612f46
+
 The project is laid out as follows:
 - main.rs = the entry point which calls UI starting function interface::start_interface
 - blockchain.rs = blockchain, block and transaction structs
