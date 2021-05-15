@@ -6,6 +6,7 @@ use std::fmt;
 
 const GENESIS_ACCOUNT: &str = "Genesis";
 
+/// A single transaction between a sender and recipient
 #[derive(Debug, Clone)]
 pub struct Transaction {
     pub sender: String,
@@ -13,6 +14,7 @@ pub struct Transaction {
     pub amount: f64
 }
 
+/// A block on the chain, storing a vector of transactions and proof of work
 #[derive(Debug)]
 pub struct Block {
     pub index: usize,
@@ -22,6 +24,7 @@ pub struct Block {
     pub previous_hash: String
 }
 
+/// A blockchain is made up of a vector of blocks, and a vector of current pending transactions
 #[derive(Debug)]
 pub struct Blockchain {
     pub chain: Vec<Block>,
@@ -41,6 +44,7 @@ impl Block {
 }
 
 impl Blockchain {
+    /// Create a new chain with two sender accounts credited 5000 of the token
     pub fn new() -> Blockchain {
         let first_hash = "".to_string();
         let first_proof = 100;
@@ -51,6 +55,7 @@ impl Blockchain {
         Blockchain { chain: vec![first_block], current_transactions: Vec::new() }
     }
 
+    /// Add a new block to the end of the chain as long as proof of work provided is valid
     pub fn new_block(&mut self, proof: u64) {
         // Borrow last block in order to hash
         let last_block = &self.chain[self.last_block_index()];
@@ -72,10 +77,11 @@ impl Blockchain {
         self.chain.push(block);
     }
 
-    // Scans through transactions and returns balances
+    /// Scan through transactions and return hash map of HashMap<Account name, Balance in account>
     pub fn balances(&self) -> HashMap<&String, f64> {
         let mut balances: HashMap<&String, f64> = HashMap::new();
         
+        // For each transaction, deduct it from sender and add it to reciever account
         for block in &self.chain {
             for transaction in &block.transactions {
                 let sender_bal = balances.get(&transaction.sender).unwrap_or(&0.).clone();
@@ -90,12 +96,12 @@ impl Blockchain {
         balances
     }
 
-    // Create new coins for the recipient
+    /// Create new coins for the recipient from the genesis account
     pub fn create_coin(&mut self, recipient: String, amount: f64) -> usize {
         self.new_transaction(GENESIS_ACCOUNT.to_string(), recipient, amount)
     }
 
-    // Adds transaction, returns index of new block that will hold this transaction
+    /// Adds a transaction, returns index of new block that will hold this transaction
     pub fn new_transaction(&mut self, sender: String, recipient: String, amount: f64) -> usize {
         let current_balances = self.balances();
         let sender_bal = current_balances.get(&sender).unwrap_or(&0.);
@@ -112,24 +118,27 @@ impl Blockchain {
         return self.last_block_index() + 1;
     }
 
-    // Tutorial returns the last block itself, however I couldn't get the copying to work given Vec<Transaction> in block so just return index
+    /// Return index of the last block in the chain
     fn last_block_index(&self) -> usize {
         self.chain.len() - 1
     }
 
-    // TODO: make better than just hashing the timestamp
+    /// Simple hash of a block
     fn hash(block: &Block) -> String {
+    // TODO: make better than just hashing the timestamp
         let mut s = DefaultHasher::new();
         block.timestamp.hash(&mut s);
         s.finish().to_string()
     }
 
+    /// Fetch the last proof in the chain
     pub fn last_proof(&self) -> u64 {
         let last_block = &self.chain[self.last_block_index()];
 
         last_block.proof
     }
 
+    /// Perform proof of work until a valid proof produced
     pub fn proof_of_work(last_proof: u64) -> u64 {
         let mut proof = 0;
         while Blockchain::valid_proof(last_proof, proof) == false {
@@ -139,7 +148,7 @@ impl Blockchain {
         proof
     }
 
-    // Very simple proof function, easy to compute and check
+    /// Very simple proof function using modular arithmetic, easy to compute and check
     fn valid_proof(last_proof: u64, proof: u64) -> bool {
         let mut s = DefaultHasher::new();
         let test_val = last_proof + proof;
