@@ -19,14 +19,14 @@ pub fn start_interface() {
                 })
                 .leaf("Current Transactions", |s| {
                     let chain = s.take_user_data::<Blockchain>().unwrap();
-                    let dialog = Dialog::info(format!("{:?}", chain.current_transactions));
+                    let dialog = Dialog::info(format!("{:?}", chain.current_transactions)).title("Current Transactions");
 
                     s.set_user_data(chain);
                     s.add_layer(dialog);
                 })
                 .leaf("Show Balances", |s| {
                     let chain = s.take_user_data::<Blockchain>().unwrap();
-                    let dialog = Dialog::info(format!("{:?}", chain.balances()));
+                    let dialog = Dialog::info(format!("{:?}", chain.balances())).title("Balances");
 
                     s.set_user_data(chain);
                     s.add_layer(dialog);
@@ -50,7 +50,8 @@ pub fn start_interface() {
                             TextView::new(format!("{}", chain))
                             .scrollable()
                         )
-                        .button("Ok", |s| { s.pop_layer(); } );
+                        .button("Ok", |s| { s.pop_layer(); } )
+                        .title("Chain");
 
                     s.set_user_data(chain);
                     s.add_layer(dialog);

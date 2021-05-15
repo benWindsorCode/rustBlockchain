@@ -34,10 +34,11 @@ From within the UI press \<ESC\> to access the menu.
 ![Menu](./images/Menu.PNG)
 
 You can do the following from the 'Actions' menu:
-- View Chain = View the chain and pending transactions
-- Show Balances = See which accounts/wallets on the chain have what balances (useful to know where you can send transactions from)
 - New Transaction = Create a transaction between wallets. This will show up on the 'View Chain' as a current transaction until immortalised into a block. Use the 'Show Balances' to see what wallets you can send tokens from. The recipient can be any string.
+- Current Transactions = See transactions pending, which are not yet in a block
+- Show Balances = See which accounts/wallets on the chain have what balances (useful to know where you can send transactions from)
 - Create Block = Simulate the act of mining and block creation, this takes current transactions and forms a new block, crediting some of the token to a mining account
+- View Chain = View the chain and pending transactions
 
 To quit select 'Quit' from the menu bar or use Ctrl+C.
 
