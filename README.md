@@ -1,6 +1,14 @@
 # rustBlockchain
 A simple implementation of a blockchain in rust, with a cursive UI to go with it for easy interaction.
 
+You can view your chain graphically:
+
+![Blockchain](./images/Chain.PNG)
+
+
+As well as add transactions and create blocks:
+
+![Blockchain](./images/NewTransaction.PNG)
 # Installation
 It is a simple project to setup:
 1. Clone the repo
@@ -21,17 +29,19 @@ cargo build
 cargo run
 
 # Usage
-From within the UI press escape to access the menu.
+From within the UI press \<ESC\> to access the menu.
+
+![Menu](./images/Menu.PNG)
 
 You can do the following from the 'Actions' menu:
-- View the chain with 'View Chain'
-- See which accounts/wallets on the chain have what balances with 'Show Balances'
-- Create a new transaction with 'New Transaction'. This will show up on the 'View Chain' as a current transaction until immortalised into a block
-- Simulate the act of mining and block creation with 'Create Block', this takes current transactions and forms a new block, crediting some of the token to a mining account
+- View Chain = View the chain and pending transactions
+- Show Balances = See which accounts/wallets on the chain have what balances (useful to know where you can send transactions from)
+- New Transaction = Create a transaction between wallets. This will show up on the 'View Chain' as a current transaction until immortalised into a block. Use the 'Show Balances' to see what wallets you can send tokens from. The recipient can be any string.
+- Create Block = Simulate the act of mining and block creation, this takes current transactions and forms a new block, crediting some of the token to a mining account
 
 To quit select 'Quit' from the menu bar or use Ctrl+C.
 
-Note: there is no persistance between runs, this is just a simple local toy blockchain.
+Note: there is no persistance between runs or any concensus algorithm, this is just a simple local toy blockchain.
 
 # Code Tour
 The project is laid out as follows:
