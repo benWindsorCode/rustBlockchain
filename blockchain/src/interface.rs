@@ -59,7 +59,7 @@ pub fn start_interface() {
         .add_leaf(
             "Help",
             |s| {
-                s.add_layer(Dialog::info("Help screen"))
+                s.add_layer(Dialog::info("<ESC> to access menu. See README.md and Actions menu for available operations on the chain."))
             }
         )
         .add_leaf(
@@ -70,10 +70,8 @@ pub fn start_interface() {
     siv.set_autohide_menu(false);
 
     siv.add_global_callback(Key::Esc, |s| s.select_menubar());
-    // siv.add_global_callback(Key::Up, |s| s.select_menubar());
 
-    //siv.add_layer(Dialog::around(TextView::new("Press <ESC> to access menu!"))
-    //    .title("Local Blockchain"));
+    siv.add_layer(Dialog::info("Press <ESC> to access the menu."));
 
     siv.run();
 }
