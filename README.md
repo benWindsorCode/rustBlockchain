@@ -46,10 +46,27 @@ Note: there is no persistance between runs or any concensus algorithm, this is j
 
 # Code Tour
 The project is laid out as follows:
-- main.rs has the entry point 
-- blockchain.rs
-- interface.rs
+- main.rs = the entry point which calls UI starting function interface::start_interface
+- blockchain.rs = blockchain, block and transaction structs
+- interface.rs = UI using cursive library
 
+You can experiment with the chain using:
+``` Rust
+let mut chain = Blockchain::new();
+
+// Add transaction to chain
+chain.new_transaction("senderA".to_string(), "recipient".to_string(), 12.3);
+
+// Do proof of work to create new block
+let last_proof = chain.last_proof();
+let new_proof = Blockchain::proof_of_work(last_proof);
+
+// Hypothetical miner gets one coin for completing the new proof
+chain.create_coin("minerA".to_string(), 1.);
+
+// Create the block
+chain.new_block(new_proof);
+```
 # Feature Wishlist
 To flesh this out further the following would be required:
 - Persistance of the chain, saving and loading to disk
