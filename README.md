@@ -12,8 +12,12 @@ As well as add transactions and create blocks:
 # Installation
 It is a simple project to setup:
 1. Clone the repo
-2. Install rust and cargo https://rustup.rs/
-2. Install ncurses per https://github.com/gyscos/cursive/wiki/Install-ncurses
+2. Install ncurses
+```bash
+sudo apt-get install libncurses5-dev libncursesw5-dev
+```
+3. Install rust and cargo https://rustup.rs/
+4. Install ncurses per https://github.com/gyscos/cursive/wiki/Install-ncurses
 
 # Running
 From within the repo directory:
